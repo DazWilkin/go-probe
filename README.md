@@ -1,5 +1,7 @@
 # Go Probe
 
+A preliminary (!) implementation for healthcheck (liveness|readiness) checking
+
 The channel(s) used by `Updater` aren't part of the `Probe` struct.
 
 `Updater` must be running for the probe to work.
@@ -14,15 +16,20 @@ The implementations (unfortunately) permits:
 ### Subscriber
 
 ```golang
-p := probe.New("liveness", logger)
+logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
+p := probe.New("example", logger)
+
+// Handler's logger may differ
 healthz := p.Handler(logger)
 
-// Channel is shared by the Updater (subscriber) and the InstananeousValuesCollector (publisher)
 ctx, cancel := context.WithCancel(context.Background())
 defer cancel()
 
-ch := make(chan probe.Status)
+ch := make(chan Status)
 signal := make(chan struct{})
+
+// Cancellable
 go p.Updater(ctx, ch, signal)
 ```
 
@@ -30,7 +37,7 @@ go p.Updater(ctx, ch, signal)
 
 ```golang
 if err != nil {
-    status := probe.Status{
+    status := Status{
         Healthy: false,
         Message: "...",
     }
@@ -39,7 +46,8 @@ if err != nil {
     return
 }
 
-status := probe.Status{
+// Otherwise
+status := Status{
     Healthy: true,
     Message: "ok",
 }
