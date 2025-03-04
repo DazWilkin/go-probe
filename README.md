@@ -1,5 +1,8 @@
 # Go Probe
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/DazWilkin/go-probe.svg)](https://pkg.go.dev/github.com/DazWilkin/go-probe)
+[![Go Report Card](https://goreportcard.com/badge/github.com/DazWilkin/go-probe)](https://goreportcard.com/report/github.com/DazWilkin/go-probe)
+
 A preliminary (!) implementation for healthcheck (liveness|readiness) checking
 
 The channel(s) used by `Updater` aren't part of the `Probe` struct.
